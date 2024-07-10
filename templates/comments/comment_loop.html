@@ -1,0 +1,35 @@
+{% for usercomment in usercomments %}
+    <div class="d-flex flex-start mt-4">
+        <a class="me-3" href="#">
+            <img class="rounded-circle shadow-1-strong"
+                src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(11).webp" alt="avatar"
+                width="65" height="65" />
+        </a>
+        <div class="flex-grow-1 flex-shrink-1">
+            <div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <p class="mb-1">
+                        {{usercomment.user}}
+                    </p>
+                </div>
+                <p class="small mb-0">
+                    {{usercomment.text}}
+                </p>
+            </div>
+          
+            <!--Form with blog id and comment id-->
+            {% include 'comments/form.html' with blog_id=usercomment.related_blog.id comment_id=usercomment.id %}
+
+            {% if usercomment.children.exists %}
+                <a data-bs-toggle="collapse" href="#multiCollapse{{usercomment.id}}" role="button" aria-expanded="false" aria-controls="multiCollapse{{usercomment.id}}">
+                    Show replies
+                </a>
+                <div class="collapse multi-collapse" id="multiCollapse{{usercomment.id}}">
+                    <div class="card card-body">
+                        {% include 'comments/comment_loop.html' with usercomments=usercomment.children.all form=form %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}
